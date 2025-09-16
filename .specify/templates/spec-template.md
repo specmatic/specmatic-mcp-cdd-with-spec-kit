@@ -44,11 +44,11 @@ When creating this spec from a user prompt:
 3. **Think like a tester**: Every vague requirement should fail the "testable and unambiguous" checklist item
 4. **Common underspecified areas**:
    - User types and permissions
-   - Data retention/deletion policies  
-   - Performance targets and scale
+   - Data retention/deletion policies
    - Error handling behaviors
    - Integration requirements
    - Security/compliance needs
+   - Port availability (9001, 3000, 4000) for development workflow
 
 ---
 
@@ -78,6 +78,24 @@ When creating this spec from a user prompt:
 - **FR-006**: System MUST authenticate users via [NEEDS CLARIFICATION: auth method not specified - email/password, SSO, OAuth?]
 - **FR-007**: System MUST retain user data for [NEEDS CLARIFICATION: retention period not specified]
 
+### API Operations Required *(mandatory for all features)*
+- **Analysis**: Does this feature need new API operations, or can existing ones be reused?
+- **If reusing**: List existing endpoints that will support this feature
+- **If extending**: Specify only the new endpoints/schemas that must be added
+- **Justification**: Why new operations are needed (if any)
+
+### Port Requirements *(mandatory for development workflow)*
+- **Mock Server Port**: Feature requires port 9001 for Specmatic mock server (verify available with `lsof -ti:9001`)
+- **Backend Port**: Feature requires port 3000 for Node.js/Express backend server (verify available with `lsof -ti:3000`)
+- **Frontend Port**: Feature requires port 4000 for React frontend development (verify available with `lsof -ti:4000`)
+- **Port Cleanup**: CRITICAL - User must check and kill any processes on these ports before implementation using `kill -9 PID` (specialized agents handle process management)
+
+### Technology Stack Requirements *(per constitutional constraints)*
+- **Backend**: Node.js with Express framework, in-memory data structures only
+- **Frontend**: React application (Create React App or Vite)
+- **Testing**: Specialized agents handle contract testing (backend-api-engineer) + UI component testing (frontend-react-engineer) + integration testing (integration-tester) - no manual curl/Postman
+- **Environment**: Use `nvm use stable` for latest stable Node.js version
+
 ### Key Entities *(include if feature involves data)*
 - **[Entity 1]**: [What it represents, key attributes without implementation]
 - **[Entity 2]**: [What it represents, relationships to other entities]
@@ -99,6 +117,8 @@ When creating this spec from a user prompt:
 - [ ] Success criteria are measurable
 - [ ] Scope is clearly bounded
 - [ ] Dependencies and assumptions identified
+- [ ] API operations analysis completed (reuse vs. extend decision made)
+- [ ] Only necessary new endpoints specified (if extending)
 
 ---
 
@@ -110,6 +130,7 @@ When creating this spec from a user prompt:
 - [ ] Ambiguities marked
 - [ ] User scenarios defined
 - [ ] Requirements generated
+- [ ] API operations analysis completed
 - [ ] Entities identified
 - [ ] Review checklist passed
 

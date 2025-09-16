@@ -26,7 +26,7 @@
 9. STOP - Ready for /tasks command
 ```
 
-**IMPORTANT**: The /plan command STOPS at step 7. Phases 2-4 are executed by other commands:
+**IMPORTANT**: The /plan command STOPS at step 8. Phases 2-4 are executed by other commands:
 - Phase 2: /tasks command creates tasks.md
 - Phase 3-4: Implementation execution (manual or via tools)
 
@@ -34,20 +34,51 @@
 [Extract from feature spec: primary requirement + technical approach from research]
 
 ## Technical Context
-**Language/Version**: [e.g., Python 3.11, Swift 5.9, Rust 1.75 or NEEDS CLARIFICATION]  
+**Language/Version**: [e.g., Node.js 22 LTS, Python 3.11, Swift 5.9, Rust 1.75 or NEEDS CLARIFICATION]  
 **Primary Dependencies**: [e.g., FastAPI, UIKit, LLVM or NEEDS CLARIFICATION]  
 **Storage**: [if applicable, e.g., PostgreSQL, CoreData, files or N/A]  
-**Testing**: [e.g., pytest, XCTest, cargo test or NEEDS CLARIFICATION]  
+**Testing**: [e.g., Specmatic MCP (contract + resiliency) + Playwright MCP (happy path verification only) - NO unit tests, NO performance tests or NEEDS CLARIFICATION]
 **Target Platform**: [e.g., Linux server, iOS 15+, WASM or NEEDS CLARIFICATION]
-**Project Type**: [single/web/mobile - determines source structure]  
-**Performance Goals**: [domain-specific, e.g., 1000 req/s, 10k lines/sec, 60 fps or NEEDS CLARIFICATION]  
-**Constraints**: [domain-specific, e.g., <200ms p95, <100MB memory, offline-capable or NEEDS CLARIFICATION]  
+**Project Type**: [single/web/mobile - determines source structure]
+**Constraints**: [domain-specific, e.g., <200ms p95, <100MB memory, offline-capable or NEEDS CLARIFICATION]
+**MCP Configuration**: Specmatic mock server port 9001, backend server port 3000, frontend server port 4000
+**Port Conflicts**: CRITICAL - Verify all ports are available before implementation: use `lsof -ti:PORT` to check, `kill -9 PID` to cleanup conflicting processes
 **Scale/Scope**: [domain-specific, e.g., 10k users, 1M LOC, 50 screens or NEEDS CLARIFICATION]
 
 ## Constitution Check
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-[Gates determined based on constitution file]
+**Simplicity**:
+- Projects: [#] (max 3 - e.g., api, cli, tests)
+- Using framework directly? (no wrapper classes)
+- Single data model? (no DTOs unless serialization differs)
+- Avoiding patterns? (no Repository/UoW without proven need)
+
+**Architecture**:
+- EVERY feature as library? (no direct app code)
+- Libraries listed: [name + purpose for each]
+- CLI per library: [commands with --help/--version/--format]
+- Library docs: llms.txt format planned?
+
+**Testing (NON-NEGOTIABLE)**:
+- RED-GREEN-Refactor cycle enforced? (test MUST fail first)
+- Git commits show tests before implementation?
+- Order: Contract→Resiliency→UI Component tests strictly followed?
+- Specmatic MCP contract testing mandatory? (both contract + resiliency tests)
+- UI Component tests using ui-component-tester agent?
+- Real dependencies used? (actual APIs, not mocks for integration)
+- Contract tests for: all API endpoints, boundary conditions, error scenarios?
+- FORBIDDEN: Implementation before test, skipping RED phase, manual curl testing
+
+**Observability**:
+- Structured logging included?
+- Frontend logs → backend? (unified stream)
+- Error context sufficient?
+
+**Versioning**:
+- Version number assigned? (MAJOR.MINOR.BUILD)
+- BUILD increments on every change?
+- Breaking changes handled? (parallel tests, migration plan)
 
 ## Project Structure
 
@@ -99,7 +130,7 @@ ios/ or android/
 └── [platform-specific structure]
 ```
 
-**Structure Decision**: [DEFAULT to Option 1 unless Technical Context indicates web/mobile app]
+**Structure Decision**: CONSTITUTIONAL DEFAULT = Option 2 (Web application with backend/frontend). Check for existing directories before scaffolding new projects. Only use Option 1 for CLI-only tools.
 
 ## Phase 0: Outline & Research
 1. **Extract unknowns from Technical Context** above:
@@ -130,38 +161,57 @@ ios/ or android/
    - Validation rules from requirements
    - State transitions if applicable
 
-2. **Generate API contracts** from functional requirements:
-   - For each user action → endpoint
-   - Use standard REST/GraphQL patterns
-   - Output OpenAPI/GraphQL schema to `/contracts/`
+2. **Analyze existing project structure and API contracts**:
+   - Check for existing backend/ and frontend/ directories at repository root
+   - Check if OpenAPI spec exists at repository root
+   - If existing projects found: Plan incremental updates to existing codebase
+   - If existing spec found: Analyze whether existing operations can support this feature
+   - If reuse possible: Document which existing endpoints/schemas to use
+   - If extension needed: **MANDATORY**: Use openapi-spec-author agent to update existing OpenAPI spec with only necessary new paths/components
+   - If no spec exists: **MANDATORY**: Use openapi-spec-author agent to create initial OpenAPI spec at repository root
+   - **CRITICAL**: ALL OpenAPI specification creation and modification MUST use openapi-spec-author agent
+   - Ensure all contracts are compatible with Specmatic MCP testing
 
-3. **Generate contract tests** from contracts:
-   - One test file per endpoint
-   - Assert request/response schemas
+3. **Generate Specmatic MCP contract tests** from contracts:
+   - Configure Specmatic MCP for contract testing against root OpenAPI spec
+   - Setup resiliency tests for boundary conditions
    - Tests must fail (no implementation yet)
+   - Focus tests on new/modified endpoints only (if extending existing spec)
+   - No manual curl testing allowed - rely on contract and resiliency test feedback
+   - Plan parallel development: backend and frontend can develop simultaneously after contract definition
 
 4. **Extract test scenarios** from user stories:
-   - Each story → integration test scenario
+   - Each story → UI component test scenario (for frontend components)
+   - Each story → contract test scenario (for API interactions)
    - Quickstart test = story validation steps
+   - Include environment switching (dev mode: port 9001, prod mode: port 3000)
 
-5. **Update agent file incrementally** (O(1) operation):
-   - Run `.specify/scripts/bash/update-agent-context.sh claude` for your AI assistant
+5. **Deploy specialized agents** for feature implementation:
+   - **openapi-spec-author** (MANDATORY for ALL OpenAPI specification authoring/updating): Create/update root API specification based on contract analysis
+   - **backend-api-engineer**: Handle complete backend implementation including contract and resiliency testing
+   - **frontend-react-engineer**: Handle frontend development including mock server management and UI component testing
+   - **integration-tester**: Final integration testing after both frontend and backend tracks complete
+
+6. **Update agent file incrementally** (O(1) operation):
+   - Run `/scripts/update-agent-context.sh [claude|gemini|copilot]` for your AI assistant
    - If exists: Add only NEW tech from current plan
    - Preserve manual additions between markers
    - Update recent changes (keep last 3)
    - Keep under 150 lines for token efficiency
    - Output to repository root
 
-**Output**: data-model.md, /contracts/*, failing tests, quickstart.md, agent-specific file
+**Output**: data-model.md, root OpenAPI spec (created or updated), failing tests, quickstart.md, agent-specific file
 
 ## Phase 2: Task Planning Approach
 *This section describes what the /tasks command will do - DO NOT execute during /plan*
 
 **Task Generation Strategy**:
-- Load `.specify/templates/tasks-template.md` as base
-- Generate tasks from Phase 1 design docs (contracts, data model, quickstart)
-- Each contract → contract test task [P]
-- Each entity → model creation task [P] 
+- Load `/templates/tasks-template.md` as base
+- Generate tasks from Phase 1 design docs (root OpenAPI spec, data model, quickstart)
+- Two parallel development tracks:
+  - **Frontend Track**: frontend-react-engineer handles mock servers and UI development [P]
+  - **Backend Track**: backend-api-engineer handles contract tests → resiliency tests → implementation (sequential within track)
+- Each entity → model creation task [P]
 - Each user story → integration test task
 - Implementation tasks to make tests pass
 
@@ -206,6 +256,7 @@ ios/ or android/
 - [ ] Post-Design Constitution Check: PASS
 - [ ] All NEEDS CLARIFICATION resolved
 - [ ] Complexity deviations documented
+- [ ] OpenAPI specification work completed using openapi-spec-author agent
 
 ---
-*Based on Constitution v2.1.1 - See `/memory/constitution.md`*
+*Based on Constitution v1.0.0 - See `/memory/constitution.md`*

@@ -1,50 +1,66 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+# Specmatic MCP Sample Constitution
 
 ## Core Principles
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### I. Contract-First Development
+All features begin with OpenAPI specification definition. Backend and frontend implementations must strictly adhere to contract-defined interfaces. API contracts serve as the single source of truth for inter-service communication, data models, and validation rules.
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+### II. Parallel Development Workflow
+Development follows a contract-first approach enabling parallel execution: OpenAPI contract definition (Foundation) - serves as coordination point for parallel development; Backend and Frontend development (Parallel Execution) - backend implements against contract while frontend develops against Specmatic mock servers simultaneously; Component testing (Final Phase) - verify UI components and contract compliance independently after parallel development completion.
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+### III. Contract Testing (NON-NEGOTIABLE)
+Specmatic MCP contract testing is mandatory for all API implementations. Both contract tests and resiliency tests must pass before code integration. UI component testing using specialized MCP agents is mandatory for frontend components. Manual testing tools are prohibited - all validation occurs through automated contract verification and component testing.
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+### IV. Environment-Based Component Isolation
+Components must be developed and tested in isolation with parallel development support. OpenAPI contract serves as the coordination interface enabling simultaneous development. Development mode enables frontend isolation using mock servers during parallel development. Production mode connects frontend to real backend after both tracks complete. Each component validates independently against contract specifications using specialized MCP agents.
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+### V. Code Structure & Quality Standards
+Maintain clear separation of concerns with routes, models, controllers in separate files/folders. Use descriptive variable names, implement proper error handling, follow RESTful conventions, and return appropriate HTTP status codes as defined in OpenAPI specifications.
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+## Technical Constraints
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+### Technology Stack Requirements
+Implementation must use consistent technology stack as defined in project templates. API specifications must follow OpenAPI 3.0+ format for contract compatibility with Specmatic MCP.
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+### Development Environment Standards
+Development environment must support parallel frontend and backend development with clear port separation for component isolation testing.
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+## Development Workflow
+
+### Phase-Based Implementation Process
+1. **Contract Definition**: Create or update OpenAPI specification with all endpoints, schemas, and validation rules
+2. **Parallel Development Phase**: Backend and Frontend development execute simultaneously:
+   - **Backend Track**: Develop API endpoints strictly following OpenAPI contract, validate with Specmatic MCP
+   - **Frontend Track**: Build UI components against Specmatic mock servers for complete isolation
+3. **Integration & Component Validation**: Test UI components independently using @agent-ui-component-tester, validate contract compliance, and perform end-to-end integration testing
+
+### Quality Gates
+- OpenAPI contract definition must be complete before parallel development begins
+- Contract tests must pass for backend track completion
+- Resiliency tests are mandatory for all API implementations
+- UI component testing required using specialized MCP agents for frontend track
+- Integration testing required after both tracks complete
+- No manual testing tools - only automated contract verification and component testing
+- Clean environment shutdown after successful test completion is mandatory
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+### Constitutional Authority
+This constitution supersedes all other development practices and guidelines. All feature development, code reviews, and architectural decisions must verify compliance with these principles. Any deviation requires explicit documentation and justification.
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+### Compliance Requirements
+- All PRs must demonstrate adherence to Contract-First Development principles
+- Specmatic MCP test results are mandatory for code integration approval
+- UI component test results using specialized MCP agents are mandatory for frontend changes
+- Parallel development workflow must be followed with proper OpenAPI contract coordination
+- Component isolation testing is required using specialized MCP agents
+- Project templates must be used for creating feature specifications aligned with these principles
+
+### Amendment Process
+Constitutional changes require documentation of impact, approval from project stakeholders, and migration plan for existing implementations. Version control tracks all constitutional modifications.
+
+#### Amendment History
+- **v1.1.0** (2025-09-13): Major architectural change - Transformed Article II from sequential "Ordered Development Workflow" to "Parallel Development Workflow" enabling simultaneous backend/frontend development. Enhanced Article IV component isolation with parallel development support. Updated Phase-Based Implementation Process to support parallel execution tracks. Added parallel development quality gates and compliance requirements.
+- **v1.0.0** (2025-09-07): Initial constitution ratification with contract-first development principles
+
+**Version**: 1.1.0 | **Ratified**: 2025-09-07 | **Last Amended**: 2025-09-13
