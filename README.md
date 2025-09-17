@@ -103,17 +103,17 @@ In GitHub Spec Kit, the `constitution.md` file is a foundational document that:
                    │
          ┌─────────┴─────────┐
          ▼                   ▼
-┌─────────────────┐  ┌─────────────────┐
-│  BACKEND TRACK  │  │ FRONTEND TRACK  │
-│                 │  │                 │
-│ Contract Tests  │  │ Mock Server     │
-│ ↓               │  │ Development     │
-│ Implementation  │  │ ↓               │
-│ ↓               │  │ UI Components   │
-│ Resiliency      │  │ ↓               │
-│ Tests           │  │ Playwright      │
-│                 │  │ Verification    │
-└─────────┬───────┘  └─────────┬───────┘
+ ┌─────────────────┐ ┌─────────────────┐ 
+ │ FRONTEND TRACK  │ │  BACKEND TRACK  │ 
+ │                 │ │                 │ 
+ │ Mock Server     │ │ Contract Tests  │ 
+ │ Development     │ │ ↓               │ 
+ │ ↓               │ │ Implementation  │ 
+ │ UI Components   │ │ ↓               │ 
+ │ ↓               │ │ Resiliency      │ 
+ │ Playwright      │ │ Tests           │ 
+ │ Verification    │ │                 │ 
+ └─────────┬───────┘ └─────────┬───────┘ 
           │                    │
           └─────────┬──────────┘
                     ▼
