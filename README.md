@@ -77,6 +77,100 @@ Again the Frontend and Backend being built in parallel which helps us save a sig
 
 > **Note:** This project uses Claude Code for demo purposes, however you can use any coding agent of your choice and make necessary changes accordingly.
 
+## 🏛️ Constitutional Governance with GitHub Spec Kit
+
+This project operates under a **constitutional governance model** following [GitHub Spec Kit](https://github.com/github/spec-kit) methodology. The **[constitution.md](.specify/memory/constitution.md)** file serves as the **architectural DNA** of the system, establishing immutable principles that govern how specifications become code.
+
+### 📋 What is the Constitution File?
+
+In GitHub Spec Kit, the `constitution.md` file is a foundational document that:
+
+- **🎯 Defines Non-Negotiable Principles**: Establishes organizational standards and development constraints
+- **🤖 Guides AI Agents**: Transforms LLMs from code generators into architectural partners that respect system design principles
+- **🏗️ Ensures Consistency**: Acts as the "rulebook" that maintains consistency across all feature development
+- **🚀 Enables Parallel Development**: Provides the framework for independent frontend/backend development tracks
+
+### Core Development Philosophy
+
+```
+📋 CONTRACT DEFINITION (Foundation)
+         │
+         ▼
+ ┌─────────────────────────────────────┐
+ │         OpenAPI Specification       │
+ │    (Single Source of Truth)         │
+ └─────────────────┬───────────────────┘
+                   │
+         ┌─────────┴─────────┐
+         ▼                   ▼
+┌─────────────────┐  ┌─────────────────┐
+│  BACKEND TRACK  │  │ FRONTEND TRACK  │
+│                 │  │                 │
+│ Contract Tests  │  │ Mock Server     │
+│ ↓               │  │ Development     │
+│ Implementation  │  │ ↓               │
+│ ↓               │  │ UI Components   │
+│ Resiliency      │  │ ↓               │
+│ Tests           │  │ Playwright      │
+│                 │  │ Verification    │
+└─────────┬───────┘  └─────────┬───────┘
+          │                    │
+          └─────────┬──────────┘
+                    ▼
+         ┌─────────────────────┐
+         │ INTEGRATION PHASE   │
+         │                     │
+         │ • End-to-End Tests  │
+         └─────────────────────┘
+```
+
+### 🎯 Constitutional Pillars
+
+| Principle | Enforcement | Benefit |
+|-----------|-------------|---------|
+| **Contract-First** | OpenAPI spec before any code | Single source of truth |
+| **Parallel Development** | Backend + Frontend simultaneously | Independent velocity |
+| **Contract Testing** | Mandatory Specmatic MCP validation | Automatic compliance |
+| **Component Isolation** | Mock servers during development | Zero dependencies |
+| **Quality Gates** | Automated testing checkpoints | Zero manual verification |
+
+### 🔄 Three-Phase Parallel Workflow
+
+```
+Phase 1: CONTRACT DEFINITION
+┌─────────────────────────────────────────┐
+│ /specify → /plan → OpenAPI Evolution    │
+│ • Analyze existing contracts            │
+│ • Extend only when necessary            │
+│ • Backward compatibility checks         │
+└─────────────────────────────────────────┘
+                    │
+                    ▼
+Phase 2: PARALLEL DEVELOPMENT
+┌─────────────────────┐    ┌─────────────────────┐
+│   BACKEND TRACK     │    │   FRONTEND TRACK    │
+│                     │    │                     │
+│ RED: Contract Tests │    │ Mock Server Setup   │
+│ GREEN: Implement    │    │ Component Build     │
+│ RED: Resiliency     │    │ Happy Path Test     │
+│ GREEN: Validation   │    │ Playwright Verify   │
+└─────────────────────┘    └─────────────────────┘
+             │                    │
+             └─────────┬──────────┘
+                       ▼
+Phase 3: INTEGRATION VERIFICATION
+┌─────────────────────────────────────────┐
+│ • Shutdown all mock servers             │
+│ • Connect frontend to real backend      │
+│ • End-to-end workflow validation        │
+│ • Complete system functionality         │
+└─────────────────────────────────────────┘
+```
+
+**⚖️ Constitutional Authority**: All development decisions must comply with these principles documented in **[constitution.md](.specify/memory/constitution.md)**. Deviations require explicit documentation and justification.
+
+> 📖 **Learn More**: Read the complete [constitutional framework](.specify/memory/constitution.md) that governs this project's development process.
+
 ## 🎯 What This Template Demonstrates
 
 This template shows **API Design First methodology** in action. Starting from **zero** (no pre-existing contracts), observe how:
@@ -93,53 +187,34 @@ This template shows **API Design First methodology** in action. Starting from **
 **Install Claude Code** (if not already installed):
 Follow installation instructions at [https://docs.anthropic.com/claude/docs/claude-code](https://docs.anthropic.com/claude/docs/claude-code)
 
-### 🔄 Optional Reset
-**Reset the project to try again** (optional - Claude Code command available):
-```
-/reset-sample-project
-```
-
-
 ## 📁 Project Structure
 
 ```
-specmatic-mcp-sample-with-spec-kit/
-├── api_spec.yaml         # OpenAPI specification (evolves with each feature)
-├── specs/               # Feature specifications and plans
-│   ├── 001-product-listing/
-│   │   ├── spec.md     # Feature specification
-│   │   ├── plan.md     # Implementation plan
-│   │   └── tasks.md    # Generated tasks
-│   └── 002-next-feature/
-├── backend/             # Node.js/Express API (created during Backend Phase)
-│   ├── src/
-│   │   ├── models/     # Data models
-│   │   ├── services/   # Business logic
-│   │   ├── cli/        # CLI utilities
-│   │   └── routes/     # API endpoints
-│   └── package.json
-├── frontend/           # React application (created during Frontend Phase)
-│   ├── src/
-│   │   ├── components/ # React components
-│   │   ├── services/   # API integration
-│   │   └── App.js
-│   └── package.json
-├── memory/             # Project constitution and guidelines
-│   └── constitution.md
-├── templates/          # Spec-kit templates for feature development
-│   ├── spec-template.md
-│   ├── plan-template.md
-│   ├── tasks-template.md
-│   └── agent-file-template.md
-├── .claude/           # Spec-kit commands and specialized agents
-│   ├── commands/      # /specify, /plan, /tasks commands
-│   └── agents/        # Specialized development agents
-│       ├── backend-api-engineer.md
-│       ├── frontend-react-engineer.md
-│       ├── integration-tester.md
-│       └── openapi-spec-author.md
-└── scripts/           # Utility scripts for project management
+api-design-first-with-spec-kit/
+├── .gitignore
+├── README.md
+├── .specify/           # GitHub Spec Kit configuration and memory
+│   ├── memory/        # Constitutional governance and guidelines
+│   │   ├── constitution.md
+│   │   └── constitution_update_checklist.md
+│   └── templates/     # Spec-kit templates for feature development
+│       ├── spec-template.md
+│       ├── plan-template.md
+│       ├── tasks-template.md
+│       └── agent-file-template.md
+└── .claude/           # Claude Code configuration and specialized agents
+    ├── commands/      # Custom slash commands: /specify, /plan, /tasks
+    │   ├── specify.md
+    │   ├── plan.md
+    │   └── tasks.md
+    └── agents/        # Specialized development agents for parallel workflow
+        ├── backend-api-engineer.md
+        ├── frontend-react-engineer.md
+        ├── integration-tester.md
+        └── openapi-spec-author.md
 ```
+
+> **Note**: The `api_spec.yaml`, `backend/`, and `frontend/` folders will be created dynamically during the first feature development cycle using the spec-kit workflow.
 
 ## 🔄 Three-Phase Parallel Development
 
